@@ -9,15 +9,13 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    try {
-      const res = await fetch("http://127.0.0.1:5000/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          username: e.target.username.value,
-          password: e.target.password.value,
-        }),
-      });
+    
+const response = await fetch("https://deadside-backend.onrender.com/api/login", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ username, password }),
+});
+
 
       const result = await res.json();
       setMessage(result.message || result.error);
