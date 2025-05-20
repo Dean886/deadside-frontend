@@ -3,19 +3,20 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 export default function Login() {
-  const navigate = useNavigate(); // ✅ Top-level hook
-  const [message, setMessage] = useState(""); // ✅ Fix undefined message bug
+  const navigate = useNavigate();
+  const [message, setMessage] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    
-const response = await fetch("https://deadside-backend.onrender.com/api/login", {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({ username, password }),
-});
-
+    try {
+      const res = await fetch("https://deadside-backend.onrender.com/api/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password }),
+      });
 
       const result = await res.json();
       setMessage(result.message || result.error);
@@ -24,9 +25,8 @@ const response = await fetch("https://deadside-backend.onrender.com/api/login", 
         localStorage.setItem("token", result.access_token);
         localStorage.setItem("user_id", result.user_id);
         localStorage.setItem("username", result.username);
-        localStorage.setItem("username", data.username);
-        toast.success("✅ Login successful!");
 
+        toast.success("✅ Login successful!");
         navigate("/dashboard");
       } else {
         toast.error(result.error || "Invalid login.");
@@ -49,12 +49,16 @@ const response = await fetch("https://deadside-backend.onrender.com/api/login", 
         <form onSubmit={handleSubmit} className="space-y-4">
           <input
             name="username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
             placeholder="Username"
             className="w-full px-4 py-2 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-green-500"
           />
           <input
             name="password"
             type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
             placeholder="Password"
             className="w-full px-4 py-2 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-green-500"
           />
